@@ -25,8 +25,7 @@ import lombok.ToString;
 
 @Entity
 @Data // lombok giúp generate các hàm constructor, get, set v.v.
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Table(name = "`order`")
 public class Order {
 	@Id
@@ -71,4 +70,22 @@ public class Order {
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	private User user;
+
+
+	public Order() {
+	}
+
+	public Order(int id, int total, Date booking_Date, String payment_Method, String status, String fullname, String country, String address, String phone, String email, String note) {
+		this.id = id;
+		this.total = total;
+		this.booking_Date = booking_Date;
+		this.payment_Method = payment_Method;
+		this.status = status;
+		this.fullname = fullname;
+		this.country = country;
+		this.address = address;
+		this.phone = phone;
+		this.email = email;
+		this.note = note;
+	}
 }

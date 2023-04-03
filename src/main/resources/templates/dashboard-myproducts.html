@@ -215,8 +215,12 @@
 												class="sl sl-icon-note"></i> Sửa</a>
 									
 												
-											<a th:href="@{/dashboard-myproducts/delete/{id}(id=${y.id})}" class="button gray"><i
-												class="sl sl-icon-close"></i> xóa</a>
+<!--											<a th:href="@{/dashboard-myproducts/delete/{id}(id=${y.id})}" class="button gray"><i-->
+<!--												class="sl sl-icon-close"></i> xóa</a>-->
+<!--											-->
+
+											<a th:href="@{'/dashboard-myproducts/delete/'+${y.id}}" class="button gray"><i
+													class="sl sl-icon-close"></i> xóa</a>
 										</div>
 									</li>
 								</th:block>

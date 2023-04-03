@@ -66,17 +66,27 @@
 						<th>mô tả</th>
 						<th>số lượng</th>
 						<th>tổng</th>
+						<th>trang thai</th>
+						<th>Action</th>
 					</tr>
 					<th:block th:each="y: ${listOrder_Item}">
 						<tr>
 							<td th:text="${y.product.product_Name}"></td>
 							<td th:text="${y.count}"></td>
-							<td th:text="${y.product.price} * ${y.count} + ' VNĐ'"></td>
+
+							<td th:text="${y.product.price} * ${y.count} + ' VNĐ'">
+							<td>
+								<select name="statusOrder">
+									<option value="chua bi hang"> Chuan bi hang</option>
+								</select>
+							</td>
+							<td><a class="btn btn-primary" th:href="@{'/dashboard-invoice/update/' + ${order.getId()}}">Update</a></td>
+
 						</tr>
 					</th:block>
 
 				</table>
-
+				<input type="hidden" name="idOrder" th:value="${order.id}">
 				<p>
 					<strong class="margin-bottom-5">địa chỉ: </strong>
 					<i th:text="${order.address}"></i><br>

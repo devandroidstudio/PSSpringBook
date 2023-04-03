@@ -78,7 +78,7 @@ public class AdminController {
 
 	@PostMapping("signin-admin")
 	public String SignInAdminHandel(@ModelAttribute("login-name") String login_name,
-			@ModelAttribute("pass") String pass, Model model) throws Exception {
+									@ModelAttribute("pass") String pass, Model model) throws Exception {
 		User admin = userService.findByIdAndRole(login_name, "admin");
 		if (admin == null) {
 			session.setAttribute("err_sign_admin", "UserName or Password is not correct!");
@@ -134,9 +134,29 @@ public class AdminController {
 	public String InvoiceView(@PathVariable int id, Model model, HttpServletRequest request) {
 		Order order = orderService.findById(id);
 		List<Order_Item> listOrder_Item = order_ItemService.getAllByOrder_Id(order.getId());
+		List<String> list = new ArrayList<>();
+		list.add("Cho xu ly");
+		list.add("Chuan bi hang");
+		list.add("Da roi kho");
+		list.add("Giao hang thanh cong");
 		model.addAttribute("listOrder_Item", listOrder_Item);
 		model.addAttribute("order", order);
+		model.addAttribute("listStatus");
 		return "dashboard-invoice";
+	}
+
+	@GetMapping("/dashboard-invoice/update/{id}")
+	public String updateInvoice(@ModelAttribute("statusOrder")  String status, @PathVariable("id") Integer id){
+		User admin = (User) session.getAttribute("admin");
+		if (admin == null) {
+			return "redirect:/signin-admin";
+		} else {
+			Order order = orderService.findById(1);
+			order.setStatus("Chuan Bi Hang");
+			orderService.saveOrder(order);
+			return "redirect:/dashboard-orders";
+		}
+
 	}
 
 	@GetMapping("/dashboard-orders")
@@ -167,7 +187,7 @@ public class AdminController {
 
 	@PostMapping("/send-message")
 	public String SendMessage(Model model, @ModelAttribute("message") String message,
-			@ModelAttribute("email") String email, HttpServletRequest request) throws Exception {
+							  @ModelAttribute("email") String email, HttpServletRequest request) throws Exception {
 		String referer = request.getHeader("Referer");
 		System.out.println(message);
 		System.out.println(email);
@@ -262,9 +282,9 @@ public class AdminController {
 
 	@PostMapping("/dashboard-myproducts/edit")
 	public String DashboardMyProductEditHandel(Model model, @ModelAttribute("product_id") int product_id,
-			@ModelAttribute("product_name") String product_name, @ModelAttribute("price") String price,
-			@ModelAttribute("availability") String availability, @ModelAttribute("category") int category,
-			@ModelAttribute("description") String description, @ModelAttribute("listImage") MultipartFile[] listImage)
+											   @ModelAttribute("product_name") String product_name, @ModelAttribute("price") String price,
+											   @ModelAttribute("availability") String availability, @ModelAttribute("category") int category,
+											   @ModelAttribute("description") String description, @ModelAttribute("listImage") MultipartFile[] listImage)
 			throws Exception {
 		User admin = (User) session.getAttribute("admin");
 		if (admin == null) {
@@ -300,29 +320,31 @@ public class AdminController {
 
 		}
 	}
-	
+
 	@GetMapping("/dashboard-myproducts/delete-image/{id}")
 	public String DeleteImage(@PathVariable int id, HttpServletRequest request) {
 		String referer = request.getHeader("Referer");
 		productImageService.deleteById(id);
+
 		return "redirect:"+referer;
 	}
 
-//	@GetMapping("/dashboard-myproducts/delete/{id}")
-//	public String DeleteMyProducts(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
-//		User admin = (User) session.getAttribute("admin");
-//		if (admin == null) {
-//			return "redirect:/dashboard-myproducts";
-//		} else {
-//			String referer = request.getHeader("Referer");
-//			productService.deleteProductById(id);
-//			
-//			
-//			return "redirect:" + referer;
-//		}
-//		
-//	
-//	}
+	@GetMapping("/dashboard-myproducts/delete/{id}")
+	public String DeleteMyProducts(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
+		User admin = (User) session.getAttribute("admin");
+		if (admin == null) {
+			return "redirect:/dashboard-myproducts";
+		} else {
+			String referer = request.getHeader("Referer");
+			productImageService.deleteAllByProductId(id);
+			productService.deleteProductById(id);
+
+
+			return "redirect:" + referer;
+		}
+
+
+	}
 
 	@GetMapping("dashboard-myproducts/{page}")
 	public String DashboardMyProductPageView(@PathVariable int page, Model model) {
@@ -343,26 +365,26 @@ public class AdminController {
 	public String DashboardMyproductSearch(@ModelAttribute("search-input") String search_input, Model model) {
 		User admin = (User) session.getAttribute("admin");
 		if (admin == null) {
-		return "redirect:/signin-admin";
+			return "redirect:/signin-admin";
 		} else {
-		Page<Product> pageProduct = null;
-		Pageable pageable = PageRequest.of(0, 3);
-		
-		// Thực hiện tìm kiếm sản phẩm theo tên
-		if (search_input != null && !search_input.isEmpty()) {
-			pageProduct = productService.findByProduct_NameContaining(search_input, pageable);
-		}
-		if (search_input == null || search_input.isEmpty()) {
-		    session.setAttribute("err_not_input", "Bạn chưa nhập vào ô tìm kiếm!");
-		    return "dashboard";
-		}
+			Page<Product> pageProduct = null;
+			Pageable pageable = PageRequest.of(0, 3);
 
-		model.addAttribute("pageProduct", pageProduct);
-		model.addAttribute("search_dashboard", "search_dashboard");
-		model.addAttribute("search_input", search_input);
-		session.setAttribute("search_input_dashboard", search_input);
-		return "dashboard-myproducts";
-	}}
+			// Thực hiện tìm kiếm sản phẩm theo tên
+			if (search_input != null && !search_input.isEmpty()) {
+				pageProduct = productService.findByProduct_NameContaining(search_input, pageable);
+			}
+			if (search_input == null || search_input.isEmpty()) {
+				session.setAttribute("err_not_input", "Bạn chưa nhập vào ô tìm kiếm!");
+				return "dashboard";
+			}
+
+			model.addAttribute("pageProduct", pageProduct);
+			model.addAttribute("search_dashboard", "search_dashboard");
+			model.addAttribute("search_input", search_input);
+			session.setAttribute("search_input_dashboard", search_input);
+			return "dashboard-myproducts";
+		}}
 
 	@GetMapping("/dashboard-myproduct/search/{page}")
 	public String DashboardMyproductSearchPage(@PathVariable int page, Model model) {
@@ -407,11 +429,13 @@ public class AdminController {
 		}
 	}
 
+
+
 	@PostMapping("dashboard-addproduct")
 	public String DashboardAddProductHandel(Model model, @ModelAttribute("product_name") String product_name,
-			@ModelAttribute("price") String price, @ModelAttribute("availability") String availability,
-			@ModelAttribute("category") int category, @ModelAttribute("description") String description,
-			@ModelAttribute("listImage") MultipartFile[] listImage) throws Exception {
+											@ModelAttribute("price") String price, @ModelAttribute("availability") String availability,
+											@ModelAttribute("category") int category, @ModelAttribute("description") String description,
+											@ModelAttribute("listImage") MultipartFile[] listImage) throws Exception {
 		User admin = (User) session.getAttribute("admin");
 		if (admin == null) {
 			return "redirect:/signin-admin";
@@ -472,8 +496,8 @@ public class AdminController {
 
 	@PostMapping("/dashboard-myprofile/changepassword")
 	public String DashboardChangePassword(Model model, @ModelAttribute("current_password") String current_password,
-			@ModelAttribute("new_password") String new_password,
-			@ModelAttribute("confirm_password") String confirm_password, HttpServletRequest request) {
+										  @ModelAttribute("new_password") String new_password,
+										  @ModelAttribute("confirm_password") String confirm_password, HttpServletRequest request) {
 		String referer = request.getHeader("Referer");
 		User admin = (User) session.getAttribute("admin");
 		if (admin == null) {
@@ -502,8 +526,8 @@ public class AdminController {
 
 	@PostMapping("/dashboard-myprofile/changeProfile")
 	public String ChangeProfile(Model model, @ModelAttribute("avatar") MultipartFile avatar,
-			@ModelAttribute("fullname") String fullname, @ModelAttribute("phone") String phone,
-			@ModelAttribute("email") String email) throws IOException {
+								@ModelAttribute("fullname") String fullname, @ModelAttribute("phone") String phone,
+								@ModelAttribute("email") String email) throws IOException {
 		User admin = (User) session.getAttribute("admin");
 		if (admin == null) {
 			return "redirect:/signin-admin";

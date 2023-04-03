@@ -21,6 +21,15 @@ public class ProductImageServiceImpl implements ProductImageService{
 	public void deleteById(int id) {
 		productImageRepository.deleteById(id);
 	}
-	
-	
+
+	@Override
+	public void deleteAllByProductId(int id) {
+		for (ProductImage pi : productImageRepository.findAll()) {
+			if (pi.getProduct().getId() == id){
+				productImageRepository.deleteById(pi.getId());
+			}
+		}
+	}
+
+
 }

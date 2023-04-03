@@ -8,4 +8,6 @@ public interface ProductImageRepository extends JpaRepository<ProductImage,Integ
 
 	void deleteById(int id);
 
+	void deleteAllByProductId(int id);
+
 }
