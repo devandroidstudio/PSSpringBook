@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="Male_Fashion Template">
+<meta name="keywords" content="Male_Fashion, unica, creative, html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Shop thu cung</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.js"></script>
+<!-- Google Font -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+	rel="stylesheet">
+
+<!-- Css Styles -->
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+<link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+<link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
+<link rel="stylesheet" href="css/nice-select.css" type="text/css">
+<link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+<link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="icon" href="/img/logo-3.png">
+</head>
+
+<body>
+	<!-- Page Preloder -->
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<!-- Offcanvas Menu Begin -->
+	<div class="offcanvas-menu-overlay"></div>
+	<div class="offcanvas-menu-wrapper">
+		<div class="offcanvas__option">
+			<div class="offcanvas__links">
+				<a th:if="${session.acc == null}" th:href="@{/signin}">Đăng nhập</a> <a
+					th:if="${session.acc != null}" th:text="${session.acc.user_Name}"
+					style="color: white;"></a> <a th:if="${session.acc != null}"
+					th:href="@{/signout}">Đăng xuất</a><a href="#">FAQs</a>
+			</div>
+			<!--  <div class="offcanvas__top__hover">
+				<span>Usd <i class="arrow_carrot-down"></i></span>
+				<ul>
+					<li>USD</li>
+					<li>EUR</li>
+					<li>USD</li>
+				</ul>
+			</div>-->
+		</div>
+		<div class="offcanvas__nav__option">
+			<a href="#" class="search-switch"><img src="img/icon/search.png"
+				alt=""></a> <a href="#"><img src="img/icon/heart.png" alt=""></a>
+			<a th:href="@{/cart}"><img src="img/icon/cart.png" alt="">
+				<span th:text="${session.countCart}"></span></a>
+		</div>
+		<div id="mobile-menu-wrap"></div>
+		<div class="offcanvas__text">
+			<p>Chào mừng đến với PetShop của chúng tôi.</p>
+		</div>
+	</div>
+	<!-- Offcanvas Menu End -->
+
+	<!-- Header Section Begin -->
+	<header class="header">
+		<div class="header__top">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6 col-md-7">
+						<div class="header__top__left">
+							<p>Chào mừng đến với PetShop của chúng tôi.</p>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-5">
+						<div class="header__top__right">
+							<div class="header__top__links">
+								<a th:if="${session.acc == null}" th:href="@{/signin}">Đăng nhập</a> <a th:if="${session.acc != null}"
+									th:text="${session.acc.user_Name}" style="color: white;"></a> <a
+									th:if="${session.acc != null}" th:href="@{/signout}">Đăng xuất</a>
+							</div>
+							<!--  <div class="header__top__hover">
+								<span>Usd <i class="arrow_carrot-down"></i></span>
+								<ul>
+									<li>USD</li>
+									<li>EUR</li>
+									<li>USD</li>
+								</ul>
+							</div>-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-3">
+					<div class="header__logo">
+						<a th:href="@{/home}"><img src="img/logo.png" alt=""></a>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6">
+					<nav class="header__menu mobile-menu">
+						<ul>
+							<li class="active"><a th:href="@{/home}">Trang chủ</a></li>
+							<li><a th:href="@{/shop}">Shop</a></li>
+							<li><a href="#">Pages</a>
+								<ul class="dropdown">
+									<li><a th:href="@{/cart}">Giỏ hàng</a></li>
+									<li><a th:href="@{/myprofile}">thông tin cá nhân</a></li>
+									<li><a th:href="@{/myhistory}">Lịch sử mua hàng</a></li>
+									<li><a th:href="@{/about}">Về chúng tôi</a></li>
+								</ul></li>
+							<li><a th:href="@{/blog}">Blog</a></li>
+							<li><a th:href="@{/contact}">Liên hệ</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div class="col-lg-3 col-md-3">
+					<div class="header__nav__option">
+						<a href="#" class="search-switch"><img
+							src="img/icon/search.png" alt=""></a> <a href="#"><img
+							src="img/icon/heart.png" alt=""></a> <a th:href="@{/cart}"><img
+							src="img/icon/cart.png" alt=""> <span
+							th:text="${session.countCart}"></span></a>
+					</div>
+				</div>
+			</div>
+			<div class="canvas__open">
+				<i class="fa fa-bars"></i>
+			</div>
+		</div>
+	</header>
+
+	<!-- Product Section Begin -->
+	<script th:if="${NoSignIn != null}">
+		swal("Lỗi", "Vui lòng đăng nhập trước khi thực hiện thao tác!", "error");
+	</script>
+	<script th:if="${error_momo != null}">
+		swal("Thanh toán không thành công!", "", "error");
+	</script>
+
+	<script th:if="${session.AddToCartErr != null}">
+		swal("Lỗi", "Vui lòng đăng nhập trước khi thực hiện thao tác!", "error");
+	</script>
+	<p th:if="${session.AddToCartErr != null}" th:text="${#session.setAttribute('AddToCartErr', null)}" style="display: none;"></p>
+	<section class="product spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<ul class="filter__controls">
+						<!-- <li  data-filter="*">Special</li> -->
+						<li class="active" data-filter=".new-arrivals">Sản phẩm mới</li>
+						<li data-filter=".hot-sales">Giảm giá</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row product__filter">
+				<th:block th:each="y : ${Top12ProductBestSellers}">
+					<div
+						class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix hot-sales"
+						style="display: none;">
+						<div class="product__item sale">
+							<div class="product__item__pic set-bg"
+								th:data-setbg="${y.productImage[0].url_Image}">
+								<span class="label">Hot</span>
+								<ul class="product__hover">
+									<li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+									<li><a href="#"><img src="img/icon/compare.png" alt="">
+											<span>Compare</span></a></li>
+									<li><a th:href="@{/productDetail/{id}(id=${y.id})}"><img
+											src="img/icon/search.png" alt=""></a></li>
+								</ul>
+							</div>
+							<div class="product__item__text">
+								<h6 th:text="${y.product_Name}"></h6>
+								<a th:href="@{/addToCart/{id}(id=${y.id})}" class="add-cart">+
+									Thêm vào giỏ</a>
+								<div class="rating">
+									<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+										class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+										class="fa fa-star-o"></i>
+								</div>
+								<h5
+									th:text=" ${#numbers.formatDecimal(y.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></h5>
+								<div class="product__color__select">
+									<label for="pc-7"> <input type="radio" id="pc-7">
+									</label> <label class="active black" for="pc-8"> <input
+										type="radio" id="pc-8">
+									</label> <label class="grey" for="pc-9"> <input type="radio"
+										id="pc-9">
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</th:block>
+				<th:block th:each="y : ${Top12ProductNewArrivals}">
+					<div
+						class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+						<div class="product__item">
+							<div class="product__item__pic set-bg"
+								th:data-setbg="${y.productImage[0].url_Image}">
+								<span class="label">New</span>
+								<ul class="product__hover">
+									<li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+									<li><a href="#"><img src="img/icon/compare.png" alt="">
+											<span>Compare</span></a></li>
+									<li><a th:href="@{/productDetail/{id}(id=${y.id})}"><img
+											src="img/icon/search.png" alt=""></a></li>
+								</ul>
+							</div>
+							<div class="product__item__text">
+								<h6 th:text="${y.product_Name}"></h6>
+								<a th:href="@{/addToCart/{id}(id=${y.id})}"
+									style="cursor: pointer;" class="add-cart">+ Thêm vào giỏ</a>
+								<div class="rating">
+									<i class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i
+										class="fa fa-star-o"></i> <i class="fa fa-star-o"></i> <i
+										class="fa fa-star-o"></i>
+								</div>
+								<h5
+									th:text=" ${#numbers.formatDecimal(y.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></h5>
+								<div class="product__color__select">
+									<label for="pc-1"> <input type="radio" id="pc-1">
+									</label> <label class="active black" for="pc-2"> <input
+										type="radio" id="pc-2">
+									</label> <label class="grey" for="pc-3"> <input type="radio"
+										id="pc-3">
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</th:block>
+			</div>
+		</div>
+	</section>
+	<!-- Product Section End -->
+
+	<!-- Categories Section Begin -->
+	<section class="categories spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3">
+					<div class="categories__text">
+						<h2>
+							Các mặt hàng <br /> <span>tha hồ lựa chọn</span> <br />
+							
+						</h2>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="categories__hot__deal">
+						<img src="https://media.istockphoto.com/id/1170512473/vector/empty-pet-shop-flat-vector-illustration.jpg?s=612x612&w=0&k=20&c=cmu9aRBwJGIeiwFzfJ5bRmDGJyD4rmJo2rQyMMMmjHU=" alt="">
+						<div class="hot__deal__sticker">
+							<span>giảm giá</span>
+							<h5>20%</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 offset-lg-1">
+					<div class="categories__deal__countdown">
+						<span>Deal hot trong tuần</span>
+						<h2>Các mặt hàng trong tuần</h2>
+						<div class="categories__deal__countdown__timer" id="countdown">
+							<div class="cd-item">
+								<span>3</span>
+								<p>Days</p>
+							</div>
+							<div class="cd-item">
+								<span>1</span>
+								<p>Giờ</p>
+							</div>
+							<div class="cd-item">
+								<span>50</span>
+								<p>phút</p>
+							</div>
+							<div class="cd-item">
+								<span>18</span>
+								<p>giây</p>
+							</div>
+						</div>
+						<a href="#" class="primary-btn">Mua ngay</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Categories Section End -->
+
+	<!-- Instagram Section Begin -->
+	<section class="instagram spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="instagram__pic">
+						<div class="instagram__pic__item set-bg"
+							data-setbg="https://c8.alamy.com/comp/2B0TF15/pet-store-vector-background-with-happy-pets-animals-pets-dog-and-cat-illustration-of-pet-shop-emblem-2B0TF15.jpg"></div>
+						<div class="instagram__pic__item set-bg"
+							data-setbg="https://as1.ftcdn.net/v2/jpg/02/20/91/22/1000_F_220912228_ypYEg2a1oeM0odV1UiFyitDsJFV8MzWA.jpg"></div>
+						<div class="instagram__pic__item set-bg"
+							data-setbg="https://i.pinimg.com/736x/be/8f/b1/be8fb125fcd7fec126d2c566d513a8e7.jpg"></div>
+						<div class="instagram__pic__item set-bg"
+							data-setbg="https://ae01.alicdn.com/kf/Hb8173d22dd6a4126a8aaad88adc19f34o/GFUITRR-Littlest-Pet-Shop-Photo-Background-Happy-Birthday-Photography-Backdrop-Cartoon-Animal-Baby-Room-Decor-Banners.jpg_Q90.jpg_.webp"></div>
+						<div class="instagram__pic__item set-bg"
+							data-setbg="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiB3UCjSK0ZVJ-iGfO78E3-tp8-olKXsgsWg&usqp=CAU"></div>
+						<div class="instagram__pic__item set-bg"
+							data-setbg="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ56GH2fP49WA5hmD9bRnvH_l0l_NPCGlvHCQ&usqp=CAU"></div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="instagram__text">
+						<h2>Instagram</h2>
+						<p>Liên hệ với chúng tôi ngay.</p>
+						<h3>#Shop_thu_cung</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Instagram Section End -->
+
+	<!-- Latest Blog Section Begin -->
+	<section class="latest spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<span>Tin tức mới</span>
+						<h2>Các mặt hàng nổi bật</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-md-6 col-sm-6">
+					<div class="blog__item">
+						<div class="blog__item__pic set-bg"
+							data-setbg="https://pethouse.com.vn/wp-content/uploads/2023/02/anh-cho-phoc-soc-9292929.jpg"></div>
+						<div class="blog__item__text">
+							<span><img src="img/icon/calendar.png" alt=""> Ngày 24/3/2023</span>
+							<h5>Những điều cần biết về giống chó Phốc Sốc	</h5>
+							<a href="#">Xem thêm</a>
+						</div>
+					</div>
+				</div>
+			
+			<div class="col-lg-4 col-md-6 col-sm-6">
+					<div class="blog__item">
+						<div class="blog__item__pic set-bg"
+							data-setbg="https://blogchomeo.com/wp-content/uploads/2023/02/Screenshot-2023-02-15-095131.jpg"></div>
+						<div class="blog__item__text">
+							<span><img src="img/icon/calendar.png" alt=""> Ngày 24/3/2023</span>
+							<h5>50 giống chó tai dài tổng hợp, điều kì thú đằng sau những đôi tai độc đáo đó.	</h5>
+							<a href="#">Xem thêm</a>
+						</div>
+					</div>
+				</div>
+		
+					<div class="col-lg-4 col-md-6 col-sm-6">
+					<div class="blog__item">
+						<div class="blog__item__pic set-bg"
+							data-setbg="https://blogchomeo.com/wp-content/uploads/2021/07/co-nen-mua-cho-pug-gia-500k-200k-hay-khong-1.jpg"></div>
+						<div class="blog__item__text">
+							<span><img src="img/icon/calendar.png" alt=""> Ngày 24/3/2023</span>
+							<h5>Có nên mua chó pug giá 500k, 200k hay không? Bảng giá chó Pug 2022	</h5>
+							<a href="#">Xem thêm</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Latest Blog Section End -->
+
+	<!-- Footer Section Begin -->
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="footer__about">
+						<div class="footer__logo">
+							<a href="#"><img src="img/footer-logo.png" alt=""></a>
+						</div>
+						<p>Khách hàng lựa chọn chúng tôi như niềm tin chọn vẹn.</p>
+						<a href="#"><img src="img/payment.png" alt=""></a>
+					</div>
+				</div>
+				<div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+					<div class="footer__widget">
+						<h6>Mua sắm</h6>
+						<ul>
+							<li><a href="#">Liên hê</a></li>
+							<li><a href="#">Phương thức thanh toán</a></li>
+							<li><a href="#">Vận chuyển</a></li>
+							<li><a href="#">Hoàn trả</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-sm-6">
+					<div class="footer__widget">
+						<h6>Mua sắm</h6>
+						<ul>
+							<li><a href="#">Liên hê</a></li>
+							<li><a href="#">Phương thức thanh toán</a></li>
+							<li><a href="#">Vận chuyển</a></li>
+							<li><a href="#">Hoàn trả</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+					<div class="footer__widget">
+						<h6>NewLetter</h6>
+						<div class="footer__newslatter">
+							<p>Trở thành người đầu tiên mua hàng ngay hôm nay</p>
+							<form action="#">
+								<input type="text" placeholder="Your email">
+								<button type="submit">
+									<span class="icon_mail_alt"></span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<div class="footer__copyright__text">
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						<p>
+							Copyright ©
+							<script>
+								document.write(new Date().getFullYear());
+							</script>
+							2020 All rights reserved <i
+								class="fa fa-heart-o" aria-hidden="true"></i> by <a
+								href="#" target="_blank">Nhom26</a>
+						</p>
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Footer Section End -->
+
+	<!-- Search Begin -->
+	<div class="search-model">
+		<div class="h-100 d-flex align-items-center justify-content-center">
+			<div class="search-close-switch">+</div>
+			<form th:action="@{/search}" method="POST" class="search-model-form">
+				<input name="search-input" type="text" id="search-input"
+					placeholder="Search here.....">
+			</form>
+		</div>
+	</div>
+	<!-- Search End -->
+
+	<!-- Js Plugins -->
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.nice-select.min.js"></script>
+	<script src="js/jquery.nicescroll.min.js"></script>
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/jquery.countdown.min.js"></script>
+	<script src="js/jquery.slicknav.js"></script>
+	<script src="js/mixitup.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/main.js"></script>
+	<!-- 	<script>
+	function addCart(id) {
+		$
+				.ajax({
+					url : "/addToCart/"+id,
+					type : "get",
+					success : function(responseData) {
+						document.getElementById("content").innerHTML = responseData;
+					}
+				});
+	}
+	</script> -->
+</body>
+
+</html>
