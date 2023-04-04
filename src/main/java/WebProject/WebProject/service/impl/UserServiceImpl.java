@@ -55,6 +55,13 @@ public class UserServiceImpl implements UserService{
 	public User findByIdAndRole(String id, String role) {
 		return userRepository.findByIdAndRole(id, role);
 	}
+
+	@Override
+	public User findById(String id) {
+		return userRepository.findById(id);
+	}
+
+
 	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();

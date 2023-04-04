@@ -1,11 +1,9 @@
 package WebProject.WebProject.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,6 +36,7 @@ import WebProject.WebProject.service.Order_ItemService;
 import WebProject.WebProject.service.ProductImageService;
 import WebProject.WebProject.service.ProductService;
 import WebProject.WebProject.service.UserService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AdminController {
@@ -141,23 +140,26 @@ public class AdminController {
 		list.add("Giao hang thanh cong");
 		model.addAttribute("listOrder_Item", listOrder_Item);
 		model.addAttribute("order", order);
-		model.addAttribute("listStatus");
+		model.addAttribute("listStatus", list);
 		return "dashboard-invoice";
 	}
 
 	@GetMapping("/dashboard-invoice/update/{id}")
-	public String updateInvoice(@ModelAttribute("statusOrder")  String status, @PathVariable("id") Integer id){
+	public String updateInvoice(@PathVariable("id") Integer id, @ModelAttribute("statusOrderABC")  String status){
 		User admin = (User) session.getAttribute("admin");
 		if (admin == null) {
 			return "redirect:/signin-admin";
 		} else {
 			Order order = orderService.findById(1);
-			order.setStatus("Chuan Bi Hang");
+			System.out.println(status);
+			System.out.println("hello");
+			order.setStatus(status);
 			orderService.saveOrder(order);
 			return "redirect:/dashboard-orders";
 		}
 
 	}
+
 
 	@GetMapping("/dashboard-orders")
 	public String DashboardOrderView(Model model) {
@@ -430,7 +432,6 @@ public class AdminController {
 	}
 
 
-
 	@PostMapping("dashboard-addproduct")
 	public String DashboardAddProductHandel(Model model, @ModelAttribute("product_name") String product_name,
 											@ModelAttribute("price") String price, @ModelAttribute("availability") String availability,
@@ -545,5 +546,76 @@ public class AdminController {
 			return "redirect:/dashboard-myprofile";
 		}
 	}
+
+	@GetMapping("/dashboard-user")
+	public String usersPage(Model model){
+		model.addAttribute("users",userService.findAll());
+		return "/dashboard-user";
+	}
+
+	@GetMapping("/admins/users/edit/{id}")
+	public String showEditFormUser(@PathVariable("id") String id, Model model){
+		try {
+			User user = userService.findById(id);
+			model.addAttribute("user",user);
+			model.addAttribute("pageTitle","Edit User (ID: "+ id+")");
+//			List<Role> list = (List<Role>) roleRepository.findAll();
+//			model.addAttribute("roles",list);
+//			for (UserRole ur : userRolesRepository.findAll()) {
+//				if (ur.getUser().getId().equals(id)){
+//					model.addAttribute("roleID", ur.getRole().getRoleId());
+//				}
+//			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "dashboard-user-edit";
+	}
+	@PostMapping("/dashboard-user-edit/save")
+	public String showNewForm( User userCurrent){
+		User user = new User();
+		user.setId(userCurrent.getId());
+		user.setUser_Name(userCurrent.getUser_Name());
+		user.setEmail(userCurrent.getEmail());
+
+		user.setPhone_Number(userCurrent.getPhone_Number());
+
+		if(!userCurrent.getPassword().isEmpty() || userCurrent.getPassword() != null){
+			String encryptedPassword = Base64.getEncoder().encodeToString(userCurrent.getPassword().getBytes());
+			user.setPassword(encryptedPassword);
+		}
+		else {
+			user.setPassword(userCurrent.getPassword());
+		}
+//		for (UserRole ur : userRolesRepository.findAll()) {
+//			if (ur.getUser().getId().equals(userCurrent.getId())){
+//				Role role = roleRepository.findById(id).orElse(new Role());
+//				ur.setRole(role);
+//				userRolesRepository.save(ur);
+//			}
+//		}
+		userService.saveUser(user);
+		return "redirect:/admins/users";
+	}
+	@GetMapping("/admins/users/delete/{id}")
+	public String deleteUserPage(@PathVariable("id") String id, RedirectAttributes ra, Model model, Principal principal){
+		try {
+			if(Objects.equals(principal.getName(), userService.findById(id).getUser_Name())){
+				ra.addFlashAttribute("message","Delete user ID:"+id+" failure. Don't delete yourself.");
+			}else {
+				userService.deleteUserById(id);
+//				for (UserRole ur : userRolesRepository.findAll()) {
+//					if(Objects.equals(ur.getUser().getId(), id)){
+//						userRolesRepository.delete(ur);
+//					}
+//				}
+				ra.addFlashAttribute("message","Delete user ID:"+id+" successfully");
+			}
+		}catch (Exception e){
+			ra.addFlashAttribute("message", e.getMessage());
+		}
+		return "redirect:/admins/users";
+	}
+
 
 }

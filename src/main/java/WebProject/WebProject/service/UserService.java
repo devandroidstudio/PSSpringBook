@@ -19,5 +19,7 @@ public interface UserService {
 
 	User findByIdAndRole(String id, String role);
 
+	User findById(String id);
+
 	List<User> findAll();    
 }
