@@ -8,6 +8,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import WebProject.WebProject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,15 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import WebProject.WebProject.entity.Category;
-import WebProject.WebProject.entity.Order;
-import WebProject.WebProject.entity.Order_Item;
-import WebProject.WebProject.entity.Product;
-import WebProject.WebProject.entity.ProductImage;
-import WebProject.WebProject.entity.User;
 import WebProject.WebProject.model.Mail;
 import WebProject.WebProject.service.CategoryService;
 import WebProject.WebProject.service.CloudinaryService;
@@ -555,38 +549,41 @@ public class AdminController {
 
 	@GetMapping("/admins/users/edit/{id}")
 	public String showEditFormUser(@PathVariable("id") String id, Model model){
-		try {
-			User user = userService.findById(id);
-			model.addAttribute("user",user);
-			model.addAttribute("pageTitle","Edit User (ID: "+ id+")");
+		User admin = (User) session.getAttribute("admin");
+		if (admin == null) {
+			return "redirect:/signin-admin";
+		}
+		else {
+			try {
+				User user = userService.findById(id);
+				model.addAttribute("user",user);
+				model.addAttribute("pageTitle","Edit User (ID: "+ id+")");
 //			List<Role> list = (List<Role>) roleRepository.findAll();
 //			model.addAttribute("roles",list);
-//			for (UserRole ur : userRolesRepository.findAll()) {
-//				if (ur.getUser().getId().equals(id)){
-//					model.addAttribute("roleID", ur.getRole().getRoleId());
+//			for (Role role : list) {
+//				if (role.getRoleId() == user.getUserRole().getRoleId()){
+//					model.addAttribute("roleID", role.getRoleId());
 //				}
 //			}
-		}catch (Exception e){
-			e.printStackTrace();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
+
 		return "dashboard-user-edit";
 	}
+
 	@PostMapping("/dashboard-user-edit/save")
 	public String showNewForm( User userCurrent){
-		User user = new User();
-		user.setId(userCurrent.getId());
-		user.setUser_Name(userCurrent.getUser_Name());
-		user.setEmail(userCurrent.getEmail());
 
-		user.setPhone_Number(userCurrent.getPhone_Number());
 
 		if(!userCurrent.getPassword().isEmpty() || userCurrent.getPassword() != null){
 			String encryptedPassword = Base64.getEncoder().encodeToString(userCurrent.getPassword().getBytes());
-			user.setPassword(encryptedPassword);
+			userCurrent.setPassword(encryptedPassword);
+		} else {
+			userCurrent.setPassword(userCurrent.getPassword());
 		}
-		else {
-			user.setPassword(userCurrent.getPassword());
-		}
+
 //		for (UserRole ur : userRolesRepository.findAll()) {
 //			if (ur.getUser().getId().equals(userCurrent.getId())){
 //				Role role = roleRepository.findById(id).orElse(new Role());
@@ -594,27 +591,27 @@ public class AdminController {
 //				userRolesRepository.save(ur);
 //			}
 //		}
-		userService.saveUser(user);
-		return "redirect:/admins/users";
+		userService.saveUser(userCurrent);
+		return "redirect:/dashboard-user";
 	}
+
 	@GetMapping("/admins/users/delete/{id}")
 	public String deleteUserPage(@PathVariable("id") String id, RedirectAttributes ra, Model model, Principal principal){
-		try {
-			if(Objects.equals(principal.getName(), userService.findById(id).getUser_Name())){
-				ra.addFlashAttribute("message","Delete user ID:"+id+" failure. Don't delete yourself.");
-			}else {
-				userService.deleteUserById(id);
+		User admin = (User) session.getAttribute("admin");
+		if(admin.getUser_Name().equals(userService.findById(id).getUser_Name())){
+			ra.addFlashAttribute("message","Delete user ID:"+id+" failure. Don't delete yourself.");
+		}else {
+			System.out.println(id);
+			userService.deleteUserById(id);
 //				for (UserRole ur : userRolesRepository.findAll()) {
 //					if(Objects.equals(ur.getUser().getId(), id)){
 //						userRolesRepository.delete(ur);
 //					}
 //				}
-				ra.addFlashAttribute("message","Delete user ID:"+id+" successfully");
-			}
-		}catch (Exception e){
-			ra.addFlashAttribute("message", e.getMessage());
+			ra.addFlashAttribute("message","Delete user ID:"+id+" successfully");
 		}
-		return "redirect:/admins/users";
+
+		return "redirect:/dashboard-user";
 	}
 
 

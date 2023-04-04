@@ -91,14 +91,8 @@
 					<i th:text="${order.payment_Method}"></i>
 				</p>
 
-				<div class="form-group mt-3 form-control" >
-					<label>Role</label>
-					<select name="statusOrderABC" >
-						<option th:each="x : ${listStatus}" th:value="${x}" th:text="${x}"></option>
-					</select>
-					<a class="btn btn-primary" th:href="@{'/dashboard-invoice/update/' + ${order.getId()}}">Update</a>
-				</div>
-				
+
+
 				
 			</div>
 
